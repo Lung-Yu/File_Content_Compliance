@@ -23,7 +23,7 @@ func (obj Compliancer) IsDetected() bool {
 
 	content := getFileContent(obj.fullpath)
 	fragments := getContentFragments(content)
-	IsDetected := compiliceAllFragment(fragments)
+	IsDetected := compiliceAllFragment(fragments, obj.regexpStr)
 
     return IsDetected
 }
@@ -73,9 +73,9 @@ func getContentFragments(content string) []string{
 	return fragments
 }
 
-func compiliceAllFragment(fragments []string)bool{
+func compiliceAllFragment(fragments []string, regexpStr string)bool{
 	for _, fragment := range fragments {
-		has_wrong_data := compilice(fragment)
+		has_wrong_data := compilice(fragment,regexpStr)
 		if true == has_wrong_data{
 			return true
 		}
@@ -83,17 +83,8 @@ func compiliceAllFragment(fragments []string)bool{
 	return false
 }
 
-func IsDetectedFromFileContent(fullpath string) bool{
-	
-	content := getFileContent(fullpath)
-	fragments := getContentFragments(content)
-	IsDetected := compiliceAllFragment(fragments)
-	
-	return IsDetected
-}
-
-func compilice(content string)bool{
-	matchbool,err := regexp.MatchString("^[A-Z]{1}[1-2]{1}[0-9]{8}$",content)
+func compilice(content string,regexpStr string)bool{
+	matchbool,err := regexp.MatchString(regexpStr,content)
 	if err != nil{
 		panic("[400] regexp match error")
 	}
